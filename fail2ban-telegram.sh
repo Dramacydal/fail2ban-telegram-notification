@@ -22,11 +22,12 @@ function show_usage {
 
 # Send notification
 function send_msg {
-  apiToken=<put your api key here>
-  chatId=<put your chat id here>
+  msg=$@
+  apiToken=<input bot token>
+  chatId=<input chat id>
   url="https://api.telegram.org/bot$apiToken/sendMessage"
 
-  curl -s -X POST $url -d chat_id=$chatId -d text="$1"
+  curl -s -X POST $url -d chat_id=$chatId -d "text=$msg" -d parse_mode="html"
   exit
 }
 
@@ -37,23 +38,31 @@ then
   show_usage
 fi
 
+geoip_url="https://get.geojs.io/v1/ip/country/full/$2"
 
 # Take action depending on argument
 if [ "$1" = 'start' ]
 then
-  msg='Fail2ban+just+started.'
+  msg='hexlightning server sheild on'
   send_msg $msg
 elif [ "$1" = 'stop' ]
 then
-  msg='Fail2ban+just+stoped.'
+  msg='hexlightning server shield turning off'
   send_msg $msg
 elif [ "$1" = 'ban' ]
 then
-  msg=$([ "$2" != '' ] && echo "Fail2ban+just+banned+$2" || echo 'Fail2ban+just+banned+an+ip.' )
+  #url="https://get.geojs.io/v1/ip/country/full/$2"
+  country=$(curl -s $geoip_url)
+  full="hexlightning server shield banned %0AIP：<code>$2</code> %0ACountry：<code>$country</code>"
+  half="hexlightning server shield banned an ip."
+  msg=$([ "$2" != '' ] && echo -e $full || echo -e $half )
   send_msg $msg
 elif [ "$1" = 'unban' ]
 then
-  msg=$([ "$2" != '' ] && echo "Fail2ban+just+unbanned+$2" || echo "Fail2ban+just+unbanned+an+ip." )
+  country=$(curl -s $geoip_url)
+  full="hexlightning server shield unban %0AIP：<code>$2</code> %0ACountry：<code>$country</code>"
+  half="hexlightning server shield unban an ip."
+  msg=$([ "$2" != '' ] && echo -e $full || echo -e $half )
   send_msg $msg
 else
   show_usage
