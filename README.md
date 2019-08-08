@@ -49,6 +49,8 @@ Send notification to telegram when fail2ban ban an IP address and unband an IP a
   PasswordAuthentication no
   PubkeyAuthentication yes
   ```
+  after done that do restart ssh daemon   
+  `service sshd restart`
 
 ### Start the service  
 service fail2ban restart
