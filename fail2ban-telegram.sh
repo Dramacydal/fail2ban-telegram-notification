@@ -39,29 +39,29 @@ then
 fi
 
 geoip_url="https://get.geojs.io/v1/ip/country/full/$2"
-
+servername=<input server name>
 # Take action depending on argument
 if [ "$1" = 'start' ]
 then
-  msg='hexlightning server sheild on'
+  msg="$servername sheild on"
   send_msg $msg
 elif [ "$1" = 'stop' ]
 then
-  msg='hexlightning server shield turning off'
+  msg="$servername server shield turning off"
   send_msg $msg
 elif [ "$1" = 'ban' ]
 then
   #url="https://get.geojs.io/v1/ip/country/full/$2"
   country=$(curl -s $geoip_url)
-  full="hexlightning server shield banned %0AIP：<code>$2</code> %0ACountry：<code>$country</code>"
-  half="hexlightning server shield banned an ip."
+  full="$servername server shield banned %0AIP：<code>$2</code> %0ACountry：<code>$country</code>"
+  half="$servername server shield banned an ip."
   msg=$([ "$2" != '' ] && echo -e $full || echo -e $half )
   send_msg $msg
 elif [ "$1" = 'unban' ]
 then
   country=$(curl -s $geoip_url)
-  full="hexlightning server shield unban %0AIP：<code>$2</code> %0ACountry：<code>$country</code>"
-  half="hexlightning server shield unban an ip."
+  full="$servername server shield unban %0AIP：<code>$2</code> %0ACountry：<code>$country</code>"
+  half="$servername server shield unban an ip."
   msg=$([ "$2" != '' ] && echo -e $full || echo -e $half )
   send_msg $msg
 else
