@@ -53,14 +53,14 @@ elif [ "$1" = 'ban' ]
 then
   #url="https://get.geojs.io/v1/ip/country/full/$2"
   country=$(curl -s $geoip_url)
-  full="$servername server shield banned %0AIP：<code>$2</code> %0ACountry：<code>$country</code>"
+  full="$servername server shield banned %0AIP: <code>$2</code> %0ACountry: <code>$country</code>"
   half="$servername server shield banned an ip."
   msg=$([ "$2" != '' ] && echo -e $full || echo -e $half )
   send_msg $msg
 elif [ "$1" = 'unban' ]
 then
   country=$(curl -s $geoip_url)
-  full="$servername server shield unban %0AIP：<code>$2</code> %0ACountry：<code>$country</code>"
+  full="$servername server shield unban %0AIP: <code>$2</code> %0ACountry: <code>$country</code>"
   half="$servername server shield unban an ip."
   msg=$([ "$2" != '' ] && echo -e $full || echo -e $half )
   send_msg $msg
