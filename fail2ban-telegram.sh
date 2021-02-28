@@ -41,27 +41,27 @@ fi
 
 geoip_url="https://get.geojs.io/v1/ip/country/full/$2"
 country=$(curl -s "$geoip_url")
-if [ "$country" = "nil" ]; then country=""; else country="%0ACountry: <code>$country</code>"; fi
+if [ "$country" = "nil" ]; then country=""; else country="%0A🌎 Country: $country"; fi
 
 # Take action depending on argument
 if [ "$1" = 'start' ]
 then
-  msg="$servername Fail2ban ON"
+  msg="🏳️ Fail2ban ON %0A🖥️ $servername"
   send_msg "$msg"
 elif [ "$1" = 'stop' ]
 then
-  msg="$servername Fail2ban OFF"
+  msg="🏳️ Fail2ban OFF %0A🖥️ $servername"  
   send_msg "$msg"
 elif [ "$1" = 'ban' ]
 then
-  full="$servername banned %0AIP: <code>$2</code> $country"
-  half="$servername banned an ip."
+  full="🏳️ Fail2ban %0A🖥️ $servername %0A🏴‍☠️ Banned IP: $2 $country"
+  half="🏳️ Fail2ban %0A🖥️ $servername banned an ip."
   msg=$([ "$2" != '' ] && echo -e "$full" || echo -e "$half" )
   send_msg "$msg"
 elif [ "$1" = 'unban' ]
 then
-  full="$servername unban %0AIP: <code>$2</code> $country"
-  half="$servername unban an ip."
+  full="🏳️ Fail2ban %0A🖥️ $servername unban %0AIP: <code>$2</code> $country"
+  half="🏳️ Fail2ban %0A🖥️ $servername unban an ip."
   msg=$([ "$2" != '' ] && echo -e "$full" || echo -e "$half" )
   send_msg "$msg"
 else
