@@ -26,11 +26,11 @@ cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
 action  =  telegram 
 ```
    
- - Make `script` directory to place our shell script  
+ - Make `scripts` directory to place our shell script  
 ```
 sudo mkdir /etc/fail2ban/scripts/
 ```  
- -  Copy `fail2ban-telegram.sh` to script directory
+ -  Copy `fail2ban-telegram.sh` to scripts directory
 
 ```
 cd /etc/fail2ban/scripts
