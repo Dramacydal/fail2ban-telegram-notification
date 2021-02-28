@@ -35,7 +35,7 @@ sudo mkdir /etc/fail2ban/scripts/
 ```
 cd /etc/fail2ban/scripts
 wget https://raw.githubusercontent.com/jaimey/fail2ban-telegram-notification/master/fail2ban-telegram.sh
-sudo chmoxd +x fail2ban-telegram.sh
+sudo chmod +x fail2ban-telegram.sh
 ```
  - Copy `telegram.conf` to `/etc/fail2ban/action.d/` directory  
 ```
@@ -47,7 +47,7 @@ wget https://raw.githubusercontent.com/jaimey/fail2ban-telegram-notification/mas
 ```
 sudo service fail2ban restart
 ```
- ### Configuration
+ ## Configuration
  - Edit `fail2ban-telegram.sh` and replace the `apiToken` and `chatId` with your api. 
 ```
 sudo nano /etc/fail2ban/scripts/fail2ban-telegram.sh
