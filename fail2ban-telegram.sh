@@ -16,9 +16,9 @@ chatId="input chat id"
 
 # Display usage information
 function show_usage {
-  echo "Usage: $0 action <ip>"
-  echo "Where action start, stop, ban, unban"
-  echo "and IP is optional passed to ban, unban"
+  echo "Usage: $0 <action> [--param1=value1] [--param2=value2]"
+  echo "Where action is: start, stop, ban, unban"
+  echo "Ban and unban actions have optional parameters: --jain=name --ip=addr"
   exit
 }
 
@@ -37,26 +37,59 @@ then
   show_usage
 fi
 
-geoip_url="https://get.geojs.io/v1/ip/country/full/$2"
+action=""
+ip=""
+jail=""
+
+if [[ $# -gt 0 ]]; then
+  action="$1"
+  shift
+else
+  echo "Error: Action must be specified."
+  usage
+fi
+
+for arg in "$@"; do
+  case "$arg" in
+    --ip=*)
+      ip="${arg#*=}"
+      ;;
+    --jail=*)
+      jail="${arg#*=}"
+      ;;
+    --help)
+      usage
+      ;;
+    *)
+      echo "Unknown parameter: $arg"
+      show_usage
+      exit 1
+      ;;
+  esac
+done
+
+if [ "$jail" != "" ]; then jail="\n🚨 ${jail}"; fi
+
+geoip_url="https://get.geojs.io/v1/ip/country/full/$ip"
 country=$(curl -s "$geoip_url")
 if [ "$country" = "nil" ]; then country=""; else country="\n🌎 $country"; fi
 
 # Take action depending on argument
-if [ "$1" = 'start' ]; then
+if [ "$action" = 'start' ]; then
   send_msg "🖥️ $servername\nService started"
-elif [ "$1" = 'stop' ]; then
+elif [ "$action" = 'stop' ]; then
   send_msg "🖥️ $servername\nService stopped"
-elif [ "$1" = 'ban' ]; then
-  if [ "$2" != '' ]; then
-    send_msg "🖥️ $servername\n 🏴‍☠️ Banned: \`$2\` $country"
+elif [ "$action" = 'ban' ]; then
+  if [ "$ip" != '' ]; then
+    send_msg "🖥️ $servername\n 🏴‍☠️ Banned: \`$ip\` $country $jail"
   else
-    send_msg "🖥️ $servername\n 🏴‍☠️ Banned an ip"
+    send_msg "🖥️ $servername\n 🏴‍☠️ Banned an ip $jail"
   fi
-elif [ "$1" = 'unban' ]; then
-  if [ "$2" != '' ]; then
-    send_msg "🖥️ $servername\n🏳️ Unbanned: \`$2\` $country"
+elif [ "$action" = 'unban' ]; then
+  if [ "$ip" != '' ]; then
+    send_msg "🖥️ $servername\n🏳️ Unbanned: \`$ip\` $country $jail"
   else
-    send_msg "🖥️ $servername\n🏳️ Unbanned an ip"
+    send_msg "🖥️ $servername\n🏳️ Unbanned an ip $jail"
   fi
 else
   show_usage
