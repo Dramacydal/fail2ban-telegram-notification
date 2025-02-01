@@ -1,54 +1,34 @@
 # fail2ban-telegram-notification
-Send notification to telegram when fail2ban ban an IP address and unband an IP address
+Send notification to telegram when fail2ban ban an IP address and unban an IP address
 
 ## Requirements
-`sudo apt install fail2ban openssh-server curl`
-- fail2ban
-- openssh
-- curl
-- Telegram Bot
+- curl: `sudo apt install curl`
+- jq: `sudo apt install jq`
+- Telegram Bot API key
+- Group id
 
 ## Installation
 
-
-
 ### Manual
-- Create a copy of jail.conf 
+- Add telegram action to DEFAULT section (or specific jail section) `/etc/fail2ban/jail.local`:
 
 ```
-cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+[DEFAULT]
+action=telegram
 ```
- 
- - Add `action = telegram` to sshd
-```
-[sshd]  
-...
-action  =  telegram 
-```
-   
  - Make `scripts` directory to place our shell script  
 ```
 sudo mkdir /etc/fail2ban/scripts/
 ```  
- -  Copy `fail2ban-telegram.sh` to scripts directory
-
-```
-cd /etc/fail2ban/scripts
-wget https://raw.githubusercontent.com/jaimey/fail2ban-telegram-notification/master/fail2ban-telegram.sh
-sudo chmod +x fail2ban-telegram.sh
-```
+ -  Copy `fail2ban-telegram.sh` to scripts directory and `sudo chmod +x fail2ban-telegram.sh` it
  - Copy `telegram.conf` to `/etc/fail2ban/action.d/` directory  
-```
-cd /etc/fail2ban/action.d/
-wget https://raw.githubusercontent.com/jaimey/fail2ban-telegram-notification/master/telegram.conf
-```
-
+ - Configure `fail2ban-telegram.sh`
 - Restart the service  
 ```
 sudo service fail2ban restart
 ```
  ## Configuration
- - Edit `fail2ban-telegram.sh` and replace the `apiToken` and `chatId` with your api. 
+ - Edit `fail2ban-telegram.sh` and replace the `apiToken` and `chatId` with your api token and chat id (must start with *-*). 
 ```
 sudo nano /etc/fail2ban/scripts/fail2ban-telegram.sh
 ```
