@@ -22,16 +22,14 @@ function show_usage {
   exit
 }
 
-
 # Send notification
 function send_msg {
   msg=$1
   url="https://api.telegram.org/bot$apiToken/sendMessage"
 
-  curl -s -X POST "$url" -d chat_id="$chatId" -d text="$msg" -d parse_mode="html"
+  curl -s -X POST "$url" -dchat_id="$chatId" -dtext="$(echo -e $msg)" -dparse_mode="MarkDown"
   exit
 }
-
 
 # Check for script arguments
 if [ $# -lt 1 ]
@@ -41,29 +39,25 @@ fi
 
 geoip_url="https://get.geojs.io/v1/ip/country/full/$2"
 country=$(curl -s "$geoip_url")
-if [ "$country" = "nil" ]; then country=""; else country="%0A🌎 Country: $country"; fi
+if [ "$country" = "nil" ]; then country=""; else country="\n🌎 $country"; fi
 
 # Take action depending on argument
-if [ "$1" = 'start' ]
-then
-  msg="🏳️ Fail2ban ON %0A🖥️ $servername"
-  send_msg "$msg"
-elif [ "$1" = 'stop' ]
-then
-  msg="🏳️ Fail2ban OFF %0A🖥️ $servername"  
-  send_msg "$msg"
-elif [ "$1" = 'ban' ]
-then
-  full="🏳️ Fail2ban %0A🖥️ $servername %0A🏴‍☠️ Banned IP: $2 $country"
-  half="🏳️ Fail2ban %0A🖥️ $servername banned an ip."
-  msg=$([ "$2" != '' ] && echo -e "$full" || echo -e "$half" )
-  send_msg "$msg"
-elif [ "$1" = 'unban' ]
-then
-  full="🏳️ Fail2ban %0A🖥️ $servername unban %0AIP: <code>$2</code> $country"
-  half="🏳️ Fail2ban %0A🖥️ $servername unban an ip."
-  msg=$([ "$2" != '' ] && echo -e "$full" || echo -e "$half" )
-  send_msg "$msg"
+if [ "$1" = 'start' ]; then
+  send_msg "🖥️ $servername\nService started"
+elif [ "$1" = 'stop' ]; then
+  send_msg "🖥️ $servername\nService stopped"
+elif [ "$1" = 'ban' ]; then
+  if [ "$2" != '' ]; then
+    send_msg "🖥️ $servername\n 🏴‍☠️ Banned: \`$2\` $country"
+  else
+    send_msg "🖥️ $servername\n 🏴‍☠️ Banned an ip"
+  fi
+elif [ "$1" = 'unban' ]; then
+  if [ "$2" != '' ]; then
+    send_msg "🖥️ $servername\n🏳️ Unbanned: \`$2\` $country"
+  else
+    send_msg "🖥️ $servername\n🏳️ Unbanned an ip"
+  fi
 else
   show_usage
 fi
